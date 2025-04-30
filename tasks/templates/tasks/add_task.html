@@ -36,6 +36,27 @@
 
     <p class="mt-3"><a href="{% url 'task_list' %}" class="btn btn-secondary">Back to Task List</a></p>
 
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const templateSelect = document.getElementById('templateSelect');
+          const titleInput = document.getElementById('titleInput');
+          const titleFieldWrapper = titleInput.closest('.mb-3');
+      
+          function toggleTitleField() {
+            if (templateSelect.value) {
+              titleFieldWrapper.style.display = 'none';
+              titleInput.value = '';
+            } else {
+              titleFieldWrapper.style.display = 'block';
+            }
+          }
+      
+          toggleTitleField(); // wywołaj raz przy starcie
+          templateSelect.addEventListener('change', toggleTitleField);
+        });
+      </script>
+
 </body>
 </html>
 

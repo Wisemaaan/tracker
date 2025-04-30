@@ -7,6 +7,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import logout
 from django.shortcuts import redirect
+from .forms import TaskCreateForm
+from .forms import TaskEditForm
+
+
 
 
 
@@ -21,16 +25,23 @@ def add_task(request):
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
-            task = form.save(commit=False)  
-            task.user = request.user  
+            task = form.save(commit=False)
+            task.user = request.user
 
+            # Jeśli wybrano template → użyj tytułu z szablonu
             if form.cleaned_data['template']:
                 task.title = form.cleaned_data['template'].title
-            task.save() 
+            # Jeśli NIE wybrano template, ale title jest pusty → błąd
+            elif not task.title:
+                form.add_error('title', 'Musisz wpisać tytuł zadania lub wybrać z listy.')
+                return render(request, 'tasks/add_task.html', {'form': form})
+
+            task.save()
             messages.success(request, 'Task added successfully!')
             return redirect('task_list')
     else:
-        form = TaskForm()
+        form = TaskCreateForm()
+
     return render(request, 'tasks/add_task.html', {'form': form})
 
 
@@ -48,7 +59,7 @@ def edit_task(request, task_id):
             messages.success(request, 'Task updated successfully!')
             return redirect('task_list')
     else:
-        form = TaskForm(instance=task)
+        form = TaskEditForm(instance=task)
     
     return render(request, 'tasks/edit_task.html', {'form': form})
 
