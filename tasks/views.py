@@ -23,18 +23,24 @@ def task_list(request):
 @login_required
 def add_task(request):
     if request.method == 'POST':
-        form = TaskForm(request.POST)
+        form = TaskCreateForm(request.POST)
         if form.is_valid():
+
+            
+            selected_template = form.cleaned_data.get('template')
+            manual_title = form.cleaned_data.get('title')
+
+            if not selected_template and not manual_title:
+                form.add_error('title', 'Musisz wpisać tytuł zadania lub wybrać z listy.')
+                return render(request, 'tasks/add_task.html', {'form': form})
+
             task = form.save(commit=False)
             task.user = request.user
 
-            # Jeśli wybrano template → użyj tytułu z szablonu
-            if form.cleaned_data['template']:
-                task.title = form.cleaned_data['template'].title
-            # Jeśli NIE wybrano template, ale title jest pusty → błąd
-            elif not task.title:
-                form.add_error('title', 'Musisz wpisać tytuł zadania lub wybrać z listy.')
-                return render(request, 'tasks/add_task.html', {'form': form})
+            if selected_template:
+                task.title = selected_template.title
+            else:
+                task.title = manual_title  # ręczny tytuł
 
             task.save()
             messages.success(request, 'Task added successfully!')
@@ -43,7 +49,6 @@ def add_task(request):
         form = TaskCreateForm()
 
     return render(request, 'tasks/add_task.html', {'form': form})
-
 
 
 

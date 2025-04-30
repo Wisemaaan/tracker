@@ -13,6 +13,20 @@
 <body class="container mt-5">
 
     <h1 class = "text-center mb-4">Add New Task</h1>
+    {% if form.errors %}
+  <div class="alert alert-danger">
+    <ul>
+      {% for field in form %}
+        {% for error in field.errors %}
+          <li><strong>{{ field.label }}</strong>: {{ error }}</li>
+        {% endfor %}
+      {% endfor %}
+      {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
     <form method="post" class="card p-4 shadow">
         {% csrf_token %}
         <div class="mb-3">
@@ -27,6 +41,10 @@
             {{ form.description.label_tag }}
             {{ form.description }}
         </div>
+        <div class="mb-3">
+            {{ form.due_date.label_tag }}
+            {{ form.due_date }}
+        </div>
         <div class="form-check mb-3">
             {{ form.completed }}
             {{ form.completed.label_tag }}
@@ -39,23 +57,22 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-          const templateSelect = document.getElementById('templateSelect');
-          const titleInput = document.getElementById('titleInput');
-          const titleFieldWrapper = titleInput.closest('.mb-3');
-      
-          function toggleTitleField() {
-            if (templateSelect.value) {
-              titleFieldWrapper.style.display = 'none';
-              titleInput.value = '';
-            } else {
-              titleFieldWrapper.style.display = 'block';
+            const templateSelect = document.getElementById('templateSelect');
+            const titleInput = document.getElementById('titleInput');
+        
+            function toggleTitleField() {
+                if (templateSelect.value) {
+                    titleInput.setAttribute('disabled', 'disabled');  // zamiast ukrywać, blokujemy
+                    titleInput.value = '';
+                } else {
+                    titleInput.removeAttribute('disabled');
+                }
             }
-          }
-      
-          toggleTitleField(); // wywołaj raz przy starcie
-          templateSelect.addEventListener('change', toggleTitleField);
+        
+            toggleTitleField();
+            templateSelect.addEventListener('change', toggleTitleField);
         });
-      </script>
+        </script>
 
 </body>
 </html>

@@ -8,21 +8,43 @@ class TaskForm(forms.ModelForm):
     required=False,
     label='Choose a Template (optional)',
     empty_label="--- Create custom task ---",
-    widget=forms.Select(attrs={'class': 'form-control', 'id': 'templateSelect'}) 
+    widget=forms.Select(attrs={'class': 'form-control', 'id': 'templateSelect'})
 )
 
     class Meta:
         model = Task
-        fields = ['title', 'description', 'completed']
+        fields = ['template', 'title', 'description', 'due_date', 'completed']
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control', 'id': 'titleInput'}), 
+            'title': forms.TextInput(attrs={'class': 'form-control', 'id': 'titleInput'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'completed': forms.CheckboxInput(attrs={'class': 'form-check-control'}),
+            'due_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'completed': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
 
-class TaskCreateForm(TaskForm):
-    pass  
+class TaskCreateForm(forms.ModelForm):
+    template = forms.ModelChoiceField(
+        queryset=TaskTemplate.objects.all(),
+        required=False,
+        label='Choose a Template (optional)',
+        empty_label="--- Create custom task ---",
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'templateSelect'})
+    )
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['title'].required = False  
+    class Meta:
+        model = Task
+        fields = ['template', 'title', 'description', 'due_date', 'completed']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'id': 'titleInput'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'due_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'completed': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
 
 class TaskEditForm(forms.ModelForm):
     class Meta:
@@ -31,5 +53,7 @@ class TaskEditForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'due_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'completed': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
+
