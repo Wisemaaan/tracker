@@ -25,11 +25,11 @@ A simple task management web application built with Django. It allows users to m
    git clone https://github.com/Wisemaaan/tracker.git
    cd tracker
 2. Install dependencies (you can also create a virtual environment):
-
+    ```bash
     pip install -r requirements.txt
 
 3. Run migrations and start the development server:
-
+    ```bash
     python manage.py migrate
     python manage.py runserver
 
@@ -39,30 +39,29 @@ A simple task management web application built with Django. It allows users to m
 
 1. To run unit tests:
 
+    ```bash
     python manage.py test
 
     Tests include:
 
-    - Adding a task
+- Adding a task
 
-    - Editing a task
+- Editing a task
 
-    - Filtering tasks
+- Filtering tasks
 
-    - Protecting views from unauthenticated users
+- Protecting views from unauthenticated users
 
 ## Future Plans
 
-    - User login and registration (already implemented)
+- Adding a task
 
-    - Deploy the app online (e.g. Railway, Render, etc.)
+- Editing a task
 
-    - Add due dates and task categories
+- Filtering tasks
 
-    - Improve mobile layout
-
-    - REST API with Django REST Framework
+- Protecting views from unauthenticated users
 
 ## Author
 
-    Wisemaaan
+- Wisemaaan
