@@ -1,15 +1,14 @@
 from django import forms
-from .models import Task
-from .models import TaskTemplate
+from .models import Task, TaskTemplate
 
 class TaskForm(forms.ModelForm):
     template = forms.ModelChoiceField(
-    queryset=TaskTemplate.objects.all(),
-    required=False,
-    label='Choose a Template (optional)',
-    empty_label="--- Create custom task ---",
-    widget=forms.Select(attrs={'class': 'form-control', 'id': 'templateSelect'})
-)
+        queryset=TaskTemplate.objects.all(),
+        required=False,
+        label='Choose a Template (optional)',
+        empty_label="--- Create custom task ---",
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'templateSelect'})
+    )
 
     class Meta:
         model = Task
@@ -24,7 +23,7 @@ class TaskForm(forms.ModelForm):
 
 class TaskCreateForm(forms.ModelForm):
     template = forms.ModelChoiceField(
-        queryset=TaskTemplate.objects.none(),
+        queryset=TaskTemplate.objects.none(),  # default: none
         required=False,
         label='Choose a Template (optional)',
         empty_label="--- Create custom task ---",
@@ -32,9 +31,12 @@ class TaskCreateForm(forms.ModelForm):
     )
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)  
+        user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        self.fields['title'].required = False  
+
+        # Optional: mark title as not required
+        if 'title' in self.fields:
+            self.fields['title'].required = False
 
         if user:
             self.fields['template'].queryset = TaskTemplate.objects.filter(user=user)
@@ -60,4 +62,3 @@ class TaskEditForm(forms.ModelForm):
             'due_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'completed': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
-
