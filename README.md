@@ -42,17 +42,7 @@ A simple task management web application built with Django. It allows users to m
     ```bash
     python manage.py test
 
-    Tests include:
-
-- Adding a task
-
-- Editing a task
-
-- Filtering tasks
-
-- Protecting views from unauthenticated users
-
-## Future Plans
+Tests include:
 
 - Adding a task
 
