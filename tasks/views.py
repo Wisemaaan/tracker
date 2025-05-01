@@ -16,14 +16,14 @@ from .forms import TaskEditForm
 
 @login_required
 def task_list(request):
-    tasks = Task.objects.all()
+    tasks = Task.objects.filter(user=request.user)
     return render(request, 'tasks/task_list.html', {'tasks': tasks})
 
 
 @login_required
 def add_task(request):
     if request.method == 'POST':
-        form = TaskCreateForm(request.POST)
+        form = TaskCreateForm(request.POST, user=request.user)
         if form.is_valid():
 
             
@@ -46,7 +46,7 @@ def add_task(request):
             messages.success(request, 'Task added successfully!')
             return redirect('task_list')
     else:
-        form = TaskCreateForm()
+        form = TaskCreateForm(user=request.user)
 
     return render(request, 'tasks/add_task.html', {'form': form})
 

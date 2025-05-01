@@ -24,17 +24,21 @@ class TaskForm(forms.ModelForm):
 
 class TaskCreateForm(forms.ModelForm):
     template = forms.ModelChoiceField(
-        queryset=TaskTemplate.objects.all(),
+        queryset=TaskTemplate.objects.none(),
         required=False,
         label='Choose a Template (optional)',
         empty_label="--- Create custom task ---",
         widget=forms.Select(attrs={'class': 'form-control', 'id': 'templateSelect'})
     )
 
-
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)  
         super().__init__(*args, **kwargs)
         self.fields['title'].required = False  
+
+        if user:
+            self.fields['template'].queryset = TaskTemplate.objects.filter(user=user)
+
     class Meta:
         model = Task
         fields = ['template', 'title', 'description', 'due_date', 'completed']
