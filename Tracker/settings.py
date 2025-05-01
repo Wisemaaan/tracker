@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-3gfs#b8=g=u^2a!hq9nhmn&z3hg26&exy@28+18!+zddg7emio'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['tracker-tracker.up.railway.app']
 
 
 # Application definition
@@ -130,3 +130,4 @@ LOGOUT_REDIRECT_URL = '/login/'
 LOGIN_URL = '/login/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+CSRF_TRUSTED_ORIGINS = ['https://tracker-tracker.up.railway.app']
